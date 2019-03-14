@@ -1,10 +1,11 @@
 import unittest
-from .models import Blog
+from app.models import Comments
 
 class UserModelTest(unittest.TestCase):
 
     def setUp(self):
-        self.new_blog = Blog(category = 'Blog')
+        self.new_comment =Comments( comment_name = 'lol')
+
 
 if __name__ =='__main__':
     unittest.main()
