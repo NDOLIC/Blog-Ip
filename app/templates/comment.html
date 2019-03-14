@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="comment">
+
+{% for  description in comment %}
+<div class="container-fluid">
+<div class="card-deck">
+  <div style="text-align:center;">
+  <div class="card-title">
+    <h5><b>Author:</b> {{description.author}}</h5>
+  </div>
+  <!-- <div class="card-body"> -->
+    <p><b>Comment: </b>{{description.comment}}</p>
+  </div>
+</div>
+</div>
+</div>
+
+
+{% endfor %}
+
+{% endblock %}
