@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, abort
 from . import main
 from ..models import User, Post, Comments
 
-from .forms import PostForm,CommentForm
+from .forms import PostForm,CommentForm,UpdatePostForm
 from datetime import datetime
 from .. import db
 from flask_login import login_user, logout_user, login_required, current_user
@@ -85,20 +85,19 @@ def edit_blog(id):
     """
     Edit a blogpost in the database
     """
-     post=Post.query.filter_by(id=id).first()
-   if post is None:
+    post=Post.query.filter_by(id=id).first()
+    if post is None:
         abort(404)
 
-   form=UpdatePostForm()
-    if form.validate_on_submit():
-         post.title=form.title.data
-         post.content=form.content.data
+        form = UpdatePostForm()
+        if form.validate_on_submit():
+            post.title=form.title.data
+            post.content=form.content.data
 
-         db.session.add(post)
-         db.session.commit()
-
-         return redirect(url_for('main.index'))
-   return render_template('update_post.html',form=form)
+            db.session.add(post)
+            db.session.commit()
+        return redirect(url_for('main.index'))
+    return render_template('update_post.html',form=form)
 
 
 #routing for subscribers
