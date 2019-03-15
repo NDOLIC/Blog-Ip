@@ -22,6 +22,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    comment = db.relationship("Comments", backref="user", lazy ="dynamic")
+
 
     @property
     def password(self):
@@ -53,7 +55,7 @@ class Post(db.Model):
     __tablename__ = 'posts'
 
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text)
+    body = db.Column(db.String)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
@@ -63,3 +65,67 @@ class Post(db.Model):
         '''
         db.session.add(self)
         db.session.commit()
+    @classmethod
+    def clear_blogs(cls):
+        '''
+        function that clears all the blogs in the form after submission
+        '''
+        Blog.all_blogs.clear()
+
+    @classmethod
+    def get_blogs(cls):
+        '''
+        function that gets particular blogs when requested by date posted
+        '''
+        blogs = Post.query.order_by(Post.timestamp.desc()).all()
+        return blogs
+
+class Comments(db.Model):
+    '''
+    comment class that create instance of comment
+    '''
+    __tablename__ = 'comment'
+
+    #add columns
+    id = db.Column(db. Integer, primary_key=True)
+    comment_name = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    blog_id = db.Column(db.Integer, db.ForeignKey("blogs.id"))
+
+    def save_comment(self):
+        '''
+        save the comment per blog
+        '''
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(cls,id):
+        comment = Comments.query.order_by (Comments.date_posted.desc()).all()
+        return comment 
+
+    @classmethod
+    def delete_comment(cls,id):
+        comment = Comments.query.filter_by(id=id).first()
+        db.session.delete(comment)
+        db.session.commit()
+
+class Subscriber(UserMixin, db.Model):
+    __tablename__="subscribers"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    title = db.Column(db.String(255))
+    email = db.Column(db.String(255),unique = True,index = True)
+
+    def save_subscriber(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_subscribers(cls,id):
+        return Subscriber.query.all()
+
+    def __repr__(self):
+       return f'User {self.email}'

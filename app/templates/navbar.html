@@ -2,7 +2,7 @@
   <a class="navbar-brand" href="/blog/new" ><button class="btn btn-outline-warning btn-sm" >Create Blog</a></button>
   <a class="navbar-brand" href="/"><button class="btn btn-outline-warning btn-sm" >HOME</a></button>
   {% if current_user.is_authenticated %}
-  <button class="btn btn-outline-warning btn-sm" ><a class="navbar-brand" href="{{url_for('main.profile',uname=current_user.username)}}">{{current_user.username}}</a></button>
+  
   <a class="navbar-brand" href="{{url_for('auth.logout')}}"><button class="btn btn-outline-warning btn-sm" >SIGN OUT</a></button>
   {% else %}
   <a class="navbar-brand" href="{{url_for('auth.login')}}"><button class="btn btn-outline-warning btn-sm" >SIGN IN</a></button>

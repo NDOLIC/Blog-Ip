@@ -4,8 +4,12 @@ class Config():
     '''
     parent class config
     '''
-    # SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://bknngeno:123@localhost/blog'
+    # MOVIE_API_BASE_URL ='https://api.themoviedb.org/3/movie/{}?api_key={}'
+    # MOVIE_API_KEY = os.environ.get('MOVIE_API_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://claire:aperloo@localhost/blog_ip'
     UPLOADED_PHOTOS_DEST ='app/static/photos'
+    
     #  email configurations
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
@@ -26,7 +30,7 @@ class ProdConfig(Config):
     pass
 
 class DevConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://bknngeno:123@localhost/blog'
+    # SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://claire:aperloo@localhost/Blog'
     DEBUG = True
 
 

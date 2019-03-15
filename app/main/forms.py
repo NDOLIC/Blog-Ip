@@ -5,5 +5,5 @@ from ..models import User, Post
 from wtforms import ValidationError
 
 class PostForm(FlaskForm):
-    body = TextAreaField(validators=[Required()])
+    content = TextAreaField(validators=[Required()])
     submit = SubmitField('Submit')
