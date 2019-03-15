@@ -1,7 +1,9 @@
 from flask import render_template, request, redirect, url_for, abort
 from . import main
-from ..models import User, Post
-from .forms import PostForm
+from ..models import User, Post, Comments
+
+from .forms import PostForm,CommentForm
+from datetime import datetime
 from .. import db
 from flask_login import login_user, logout_user, login_required, current_user
 # from ..email import mail_message
@@ -11,10 +13,10 @@ from flask_login import login_user, logout_user, login_required, current_user
 def index():
     """View root page function that returns index page and the various news sources"""
 
-    title = 'Home- Welcome to app of blog'
+    title = 'Home- Welcome to app of post'
 
-    blogs = Post.get_blogs()
-    return render_template('index.html',title = title, blogs = blogs)
+    posts = Post.get_post()
+    return render_template('index.html',title = title, posts = posts)
 
 
 @main.route('/user/<username>')
@@ -36,17 +38,17 @@ def post(id):
 
 @main.route('/blog/new',methods=['GET','POST'])
 @login_required
-def new_blog():
+def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        Blog_post = form.content.data
-        new_blog = Post(body=Blog_post)
-        new_blog.save_post()
+        blog_post = form.content.data
+        new_post = Post(body= blog_post,user_id = current_user.id,date_posted=datetime.now())
+        new_post.save_post()
         return redirect(url_for('main.index'))
     return render_template('blogs.html', form = form)
 
 @main.route('/blog/new/view')
-def view_blog():
+def view_post():
     blog = Post.query.filter_by()
     blogs = Post.query.filter_by()
     return render_template('index.html',blog=blog,blogs=blogs)
@@ -56,14 +58,14 @@ def view_blog():
 def new_comment(id):
     form = CommentForm()
     if form.validate_on_submit():
-        new_comment = Comments(comment_name = form.comment_name.data,user=current_user, blog_id =id)
+        new_comment = Comments(user=current_user, post_id =id)
         new_comment.save_comment()
         return redirect(url_for('.index'))
     return render_template('new_comment.html',form = form)
 
 @main.route('/blog/new/comment/<int:id>/view')
 def view_comments(id):
-    comment = Comments.query.filter_by(blog_id = id)
+    comment = Comments.query.filter_by(post_id = id)
     return render_template('comment.html',comment = comment)
 
 @main.route('/delete_comment/<int:id>')
@@ -77,6 +79,26 @@ def delete_comment(id):
         return redirect(url_for('.index'))
     return render_template('comment.html')
 
+@main.route('/blog/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_blog(id):
+    """
+    Edit a blogpost in the database
+    """
+     post=Post.query.filter_by(id=id).first()
+   if post is None:
+        abort(404)
+
+   form=UpdatePostForm()
+    if form.validate_on_submit():
+         post.title=form.title.data
+         post.content=form.content.data
+
+         db.session.add(post)
+         db.session.commit()
+
+         return redirect(url_for('main.index'))
+   return render_template('update_post.html',form=form)
 
 
 #routing for subscribers

@@ -17,13 +17,11 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(255))
     pass_secure = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True, index=True)
-    bio = db.Column(db.String(255))
-    profile_pic_path = db.Column(db.String())
     password_hash = db.Column(db.String(255))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     comment = db.relationship("Comments", backref="user", lazy ="dynamic")
-
+    
 
     @property
     def password(self):
@@ -56,29 +54,30 @@ class Post(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    date_posted = db.Column(db.DateTime)
+
 
     def save_post(self):
         '''
-        Function to save a new blog.
+        Function to save a new post.
         '''
         db.session.add(self)
         db.session.commit()
     @classmethod
-    def clear_blogs(cls):
+    def clear_post(cls):
         '''
-        function that clears all the blogs in the form after submission
+        function that clears all the posts in the form after submission
         '''
-        Blog.all_blogs.clear()
+        Post.all_posts.clear()
 
     @classmethod
-    def get_blogs(cls):
+    def get_post(cls):
         '''
-        function that gets particular blogs when requested by date posted
+        function that gets particular posts when requested by date posted
         '''
-        blogs = Post.query.order_by(Post.timestamp.desc()).all()
-        return blogs
+        posts = Post.query.all()
+        return posts
 
 class Comments(db.Model):
     '''
@@ -91,11 +90,11 @@ class Comments(db.Model):
     comment_name = db.Column(db.String(255))
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    blog_id = db.Column(db.Integer, db.ForeignKey("blogs.id"))
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"))
 
     def save_comment(self):
         '''
-        save the comment per blog
+        save the comment per post
         '''
         db.session.add(self)
         db.session.commit()
