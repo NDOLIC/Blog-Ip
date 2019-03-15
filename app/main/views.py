@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, abort
 from . import main
-from ..models import User, Post, Comments
+from ..models import User, Post, Comments, Subscriber
 
 from .forms import PostForm,CommentForm,UpdatePostForm
 from datetime import datetime
@@ -57,8 +57,9 @@ def view_post():
 @main.route('/blog/new/comment/<int:id>',methods = ['GET','POST'])
 def new_comment(id):
     form = CommentForm()
+    content = form.content.data
     if form.validate_on_submit():
-        new_comment = Comments(user=current_user, post_id =id)
+        new_comment = Comments(comment_name = content, user=current_user, post_id =id)
         new_comment.save_comment()
         return redirect(url_for('.index'))
     return render_template('new_comment.html',form = form)
