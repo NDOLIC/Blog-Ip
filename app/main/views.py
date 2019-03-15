@@ -8,22 +8,13 @@ from flask_login import login_user, logout_user, login_required, current_user
 
 
 @main.route('/')
-def new_post():
+def index():
     """View root page function that returns index page and the various news sources"""
 
     title = 'Home- Welcome to app of blog'
 
-    form = PostForm()
-
-    if form.validate_on_submit():
-        post = Post(body=form.body.data, author_id=current_user.id)
-        post.save_post()
-        return redirect(url_for('.index'))
-
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-
-    return render_template('index.html', form=form, posts=posts)
-    return render_template('blogs.html',title = title, post = blogs, form=form )
+    blogs = Post.get_blogs()
+    return render_template('index.html',title = title, blogs = blogs)
 
 
 @main.route('/user/<username>')
@@ -51,8 +42,8 @@ def new_blog():
         Blog_post = form.content.data
         new_blog = Post(body=Blog_post)
         new_blog.save_post()
-        return redirect(url_for('main.view_blog'))
-    return render_template('blogs.html',PostForm = PostForm)
+        return redirect(url_for('main.index'))
+    return render_template('blogs.html', form = form)
 
 @main.route('/blog/new/view')
 def view_blog():
