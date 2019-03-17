@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top" >
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
   <a class="navbar-brand" href="/blog/new" ><button class="btn btn-outline-warning btn-sm" >Create Blog</a></button>
   <a class="navbar-brand" href="/"><button class="btn btn-outline-warning btn-sm" >HOME</a></button>
   {% if current_user.is_authenticated %}
@@ -6,7 +6,7 @@
   <a class="navbar-brand" href="{{url_for('auth.logout')}}"><button class="btn btn-outline-warning btn-sm" >SIGN OUT</a></button>
   {% else %}
   <a class="navbar-brand" href="{{url_for('auth.login')}}"><button class="btn btn-outline-warning btn-sm" >SIGN IN</a></button>
-  
+  <li><a href="{{url_for('auth.register')}}"><H3>Subscribe</H3></a></li>
      {%endif%}
     </ul>
-  </nav>
+</nav>

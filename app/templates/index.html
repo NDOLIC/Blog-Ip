@@ -24,7 +24,10 @@
         {% import "bootstrap/wtf.html" as wtf %} 
         {% block content %} 
         {% if current_user.is_authenticated %}
+        <div class="jumbotron">
+        <h1>Welcome to Amazing Blogs</h1>
         <h3>Hello {{current_user.username}}</h3>
+        
         <div class="row">
           <div class="col-xs-6">
             {% for post in posts %}
@@ -52,12 +55,7 @@
                   <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                   <span><strong>View comments</strong></span>            
               </a>
-              <a href="/delete_comment/{{post.id}}" class="btn btn-primary a-btn-slide-text">
-                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                  <span><strong>Delete a Comment</strong></span>            
-              </a>
-
-              
+            
             {% endfor %}
           </div>
           
@@ -79,6 +77,8 @@
               </div>
             </div>
           </div>
+          </div>
+          
           {% endif %}
            {{ super() }}
           {% endblock %}

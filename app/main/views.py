@@ -67,13 +67,16 @@ def new_comment(id):
 @main.route('/blog/new/comment/<int:id>/view')
 def view_comments(id):
     comment = Comments.query.filter_by(post_id = id)
+    
     return render_template('comment.html',comment = comment)
 
 @main.route('/delete_comment/<int:id>')
 @login_required
 def delete_comment(id):
+
     if current_user.is_authenticated:
         comment = Comments.query.filter_by(id = id).first()
+        post = Post.query.filter_by(id=id)
         # comment.delete_comment()
         db.session.delete(comment)
         db.session.commit()
@@ -87,18 +90,17 @@ def edit_blog(id):
     Edit a blogpost in the database
     """
     post=Post.query.filter_by(id=id).first()
+    edit_form = UpdatePostForm()
     if post is None:
         abort(404)
-
-        form = UpdatePostForm()
-        if form.validate_on_submit():
-            post.title=form.title.data
-            post.content=form.content.data
-
-            db.session.add(post)
-            db.session.commit()
+        content = form.content.data
+    if edit_form.validate_on_submit():
+        post.body=edit_form.body.data
+        
+        db.session.add(post)
+        db.session.commit()
         return redirect(url_for('main.index'))
-    return render_template('update_post.html',form=form)
+    return render_template('update_post.html',form=edit_form)
 
 
 #routing for subscribers

@@ -1,3 +1,4 @@
+<div class="jumbotron">
 <ul class="posts">
     {% for post in posts %}
     <li class="post">
@@ -6,6 +7,7 @@
             <div class="post-author"><a href="{{ url_for('.user', username=post.author.username) }}">{{ post.author.username }}</a></div>
             <div class="post-body">{{ post.body }}</div>
         </div>
+</div>
     </li>
     {% endfor %}
 </ul>

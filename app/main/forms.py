@@ -11,9 +11,8 @@ class PostForm(FlaskForm):
 class CommentForm(FlaskForm):
     content = TextAreaField(validators=[Required()])
     submit = SubmitField('Submit')
-    
+
 class UpdatePostForm(FlaskForm):
-    title=StringField('Title',validators = [Required()])
-    content=TextAreaField('Content',validators = [Required()])
+    body=StringField('Title',validators = [Required()])
     submit=SubmitField('SUBMIT')
 
